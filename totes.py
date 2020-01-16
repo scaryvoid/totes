@@ -3,6 +3,7 @@
 # return sum of numbers piped to this program
 
 import sys, argparse
+listCounters = []
 
 
 class Counter(object):
@@ -14,15 +15,22 @@ class Counter(object):
         self.count += float(num)
 
 
+def getsum():
+    listTotals = []
+    for obj in listCounters:
+        listTotals.append(str(obj.count))
+
+    print(" ".join(listTotals))
+
+
 def main():
     parser = argparse.ArgumentParser(description='Add columns of data.',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-d', metavar='<n>', nargs=1, default=' ', type=str, help='Delimiter')
     parser.add_argument('-f', nargs='+', default='1', help='Space separated list of colums to total')
     parser.add_argument('-p', help='Print input', action='store_true')
+    parser.add_argument('-r', help='Print running total', action='store_true')
     args = parser.parse_args()
-    listCounters = []
-    listTotals = []
 
     for column in args.f:
         if column.isdigit():
@@ -48,11 +56,10 @@ def main():
             obj.increment(newnum)
         if args.p:
             print(line.strip())
-
-    for obj in listCounters:
-        listTotals.append(str(obj.count))
-
-    print(" ".join(listTotals))
+        if args.r:
+            getsum()
+    if not args.r:
+        getsum()
 
 
 if __name__ == "__main__":
